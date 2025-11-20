@@ -24,7 +24,7 @@ This changelog is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.
 - `alias`, `staked_account_id`, `staked_node_id` and `decline_staking_reward` fields to AccountCreateTransaction
 - `staked_account_id`, `staked_node_id` and `decline_staking_reward` fields to AccountInfo
 - Added `examples/token_create_transaction_supply_key.py` to demonstrate token creation with and without a supply key.
-
+- Add `set_token_id`, `set_token_ids`, `_from_proto`, `_validate_checksum` to TokenAssociateTransaction [#795]
 ### Changed
 - Refactored token-related example scripts (`token_delete.py`, `token_dissociate.py`, etc.) for improved readability and modularity. [#370]
 - upgrade: step security action upgraded from harden-runner-2.13.1 to harden-runner-2.13.1
