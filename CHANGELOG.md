@@ -27,7 +27,11 @@ This changelog is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.
 - Added `examples/token_create_transaction_supply_key.py` to demonstrate token creation with and without a supply key.
 - Add `set_token_id`, `set_token_ids`, `_from_proto`, `_validate_checksum` to TokenAssociateTransaction [#795]
 ### Changed
+- Added BatchTransaction class
 
+
+### Changed
+- Upgraded step-security/harden-runner v2.13.2
 - Limit workflow bot to one message per PR
 - Refactored token-related example scripts (`token_delete.py`, `token_dissociate.py`, etc.) for improved readability and modularity. [#370]
 - upgrade: step security action upgraded from harden-runner-2.13.1 to harden-runner-2.13.1
