@@ -38,13 +38,13 @@ jobs:
 
           echo "Unverified commits: $UNVERIFIED_COUNT"
 
-          EXISTING_BOT_COMMENT_COUNT=$(gh pr view $PR_NUMBER --repo $REPO --json comments | jq '[.comments[] | select(.author.login == "github-actions[bot]" and (.body | contains("[commit-verification-bot]")))] | length')
+          EXISTING_BOT_COMMENT_COUNT=$(gh pr view $PR_NUMBER --repo $REPO --json comments | jq '[.comments[] | select((.author.login // .user.login // .actor.login) == "github-actions[bot]" and (.body | contains("[commit-verification-bot]")))] | length')
 
           echo "Existing verification commit bot comments: $EXISTING_BOT_COMMENT_COUNT"
     
           if [ "$UNVERIFIED_COUNT" -gt 0 ]; then
             if [ "$EXISTING_BOT_COMMENT_COUNT" -ge 1 ]; then   
-              echo "Bot comment limit reached ($MAX_COMMENTS)."   
+              echo "VerificationBot already commented. Skipping additional comments."
             else 
               COMMENT=$(cat <<EOF
             [commit-verification-bot]
@@ -69,7 +69,6 @@ jobs:
               gh pr comment $PR_NUMBER --repo $REPO --body "$COMMENT"
               echo "Comment added to PR #$PR_NUMBER"
             fi
-            echo "VerificationBot already commented. Skipping additional comments."
 
             exit 1
           else
