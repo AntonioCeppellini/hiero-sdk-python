@@ -38,15 +38,14 @@ jobs:
 
           echo "Unverified commits: $UNVERIFIED_COUNT"
 
-          EXISTING_BOT_COMMENT_COUNT=$(gh pr view $PR_NUMBER --repo $REPO --json comments | jq '[.comments[] | select(.author.login == "github-actions[bot]")] | length')
+          EXISTING_BOT_COMMENT_COUNT=$(gh pr view $PR_NUMBER --repo $REPO --json comments | jq '[.comments[] | select(.author.login == "github-actions[bot]" and (.body | contains("[commit-verification-bot]")))] | length')
     
-          MAX_BOT_COMMENTS=1
           if [ "$UNVERIFIED_COUNT" -gt 0 ]; then
-            if [ "$EXISTING_BOT_COMMENT_COUNT" -ge "$MAX_BOT_COMMENTS" ]; then   
+            if [ "$EXISTING_BOT_COMMENT_COUNT" -ge 1 ]; then   
               echo "Bot comment limit reached ($MAX_COMMENTS)."   
-              exit 0   
             fi   
             COMMENT=$(cat <<EOF
+            [commit-verification-bot]
             Hi, this is VerificationBot. 
             Your pull request cannot be merged as it has **unverified commits**. 
             View your commit verification status: [Commits Tab]($COMMITS_URL).
