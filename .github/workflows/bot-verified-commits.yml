@@ -40,13 +40,13 @@ jobs:
 
           EXISTING_BOT_COMMENT_COUNT=$(gh pr view $PR_NUMBER --repo $REPO --json comments | jq '[.comments[] | select(.author.login == "github-actions[bot]" and (.body | contains("[commit-verification-bot]")))] | length')
 
-          echo "Existing verification commit bot comments: $EXISTING_BOT_COMMENT"
+          echo "Existing verification commit bot comments: $EXISTING_BOT_COMMENT_COUNT"
     
           if [ "$UNVERIFIED_COUNT" -gt 0 ]; then
             if [ "$EXISTING_BOT_COMMENT_COUNT" -ge 1 ]; then   
               echo "Bot comment limit reached ($MAX_COMMENTS)."   
-            fi   
-            COMMENT=$(cat <<EOF
+            else 
+              COMMENT=$(cat <<EOF
             [commit-verification-bot]
             Hi, this is VerificationBot. 
             Your pull request cannot be merged as it has **unverified commits**. 
@@ -68,9 +68,8 @@ jobs:
 
               gh pr comment $PR_NUMBER --repo $REPO --body "$COMMENT"
               echo "Comment added to PR #$PR_NUMBER"
-            else
-              echo "VerificationBot already commented. Skipping additional comments."
             fi
+            echo "VerificationBot already commented. Skipping additional comments."
 
             exit 1
           else
