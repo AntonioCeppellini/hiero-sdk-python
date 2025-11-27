@@ -38,6 +38,9 @@ jobs:
 
           echo "Unverified commits: $UNVERIFIED_COUNT"
 
+          gh pr view $PR_NUMBER --repo $REPO --json comments | jq '.' > full_comments.json
+          cat full_comments.json
+
           EXISTING_BOT_COMMENT_COUNT=$(gh pr view $PR_NUMBER --repo $REPO --json comments | jq '[.comments[] | select((.author.login // .user.login // .actor.login) == "github-actions[bot]" and (.body | contains("[commit-verification-bot]")))] | length')
 
           echo "Existing verification commit bot comments: $EXISTING_BOT_COMMENT_COUNT"
