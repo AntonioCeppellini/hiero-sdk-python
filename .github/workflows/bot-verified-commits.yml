@@ -39,6 +39,8 @@ jobs:
           echo "Unverified commits: $UNVERIFIED_COUNT"
 
           EXISTING_BOT_COMMENT_COUNT=$(gh pr view $PR_NUMBER --repo $REPO --json comments | jq '[.comments[] | select(.author.login == "github-actions[bot]" and (.body | contains("[commit-verification-bot]")))] | length')
+
+          echo "Existing verification commit bot comments: $EXISTING_BOT_COMMENT"
     
           if [ "$UNVERIFIED_COUNT" -gt 0 ]; then
             if [ "$EXISTING_BOT_COMMENT_COUNT" -ge 1 ]; then   
@@ -64,9 +66,13 @@ jobs:
           EOF
             )
 
-            gh pr view $PR_NUMBER --repo $REPO --json comments --jq '.comments[].body' | grep -F "PythonBot" >/dev/null || \
-            (gh pr comment $PR_NUMBER --repo $REPO --body "$COMMENT" && echo "Comment added to PR #$PR_NUMBER")
+              gh pr comment $PR_NUMBER --repo $REPO --body "$COMMENT"
+              echo "Comment added to PR #$PR_NUMBER"
+            else
+              echo "VerificationBot already commented. Skipping additional comments."
+            fi
+
+            exit 1
           else
             echo "All commits in PR #$PR_NUMBER are verified."
           fi
- 
